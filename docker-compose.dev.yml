@@ -1,0 +1,12 @@
+# Development overrides
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+
+services:
+  app:
+    build:
+      args:
+        VITE_BASE_PATH: ${VITE_BASE_PATH:-/race/}
+    environment:
+      - NODE_ENV=development
+    # Restart only on failure in dev
+    restart: "no"

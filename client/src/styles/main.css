@@ -1,0 +1,449 @@
+/* Base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+  background-color: #1a202c;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none;
+}
+
+canvas {
+  display: block;
+}
+
+/* UI Layer */
+#ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+/* HUD Panels */
+.hud-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.hud-panel {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+
+.hud-left {
+  border: 1px solid rgba(127, 29, 29, 0.3);
+}
+
+.hud-right {
+  border: 1px solid rgba(75, 85, 99, 0.5);
+  text-align: right;
+}
+
+/* Game Title */
+.game-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  font-style: italic;
+  color: #eab308;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 2px 2px 0px #000;
+}
+
+/* Status Bar */
+.status-bar {
+  font-size: 0.75rem;
+  color: #d1d5db;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+/* Turn Warning */
+.turn-warning {
+  background: #dc2626;
+  color: white;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  font-size: 0.75rem;
+  animation: blink 0.5s infinite;
+}
+
+.turn-warning.hidden {
+  display: none;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Control Mode */
+.control-mode {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+}
+
+#control-mode-display {
+  color: white;
+}
+
+#control-mode-display.mouse-mode {
+  color: #fbbf24;
+}
+
+/* Rating Display */
+.rating-label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.rating-value {
+  font-size: 2.5rem;
+  font-family: monospace;
+  font-weight: 900;
+  text-shadow: 0 0 10px rgba(234, 179, 8, 0.5);
+}
+
+.speed-value {
+  font-size: 0.875rem;
+  font-family: monospace;
+  margin-top: 0.25rem;
+  color: white;
+}
+
+.speed-value.speed-fast {
+  color: #facc15;
+}
+
+/* Overlay Screens */
+.overlay-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  z-index: 50;
+}
+
+.overlay-screen.hidden {
+  display: none;
+}
+
+/* Wasted Screen */
+#wasted-screen {
+  background: rgba(127, 29, 29, 0.4);
+}
+
+.wasted-title {
+  font-size: 4rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  text-shadow: 0 5px 15px black;
+  margin-bottom: 0.5rem;
+}
+
+.wasted-subtitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #facc15;
+  margin-bottom: 1rem;
+}
+
+.respawn-text {
+  font-size: 1.25rem;
+  color: #fecaca;
+  font-family: monospace;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Start Screen */
+#start-screen {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.start-panel {
+  background: #111827;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid #374151;
+  max-width: 28rem;
+  width: 100%;
+  text-align: center;
+}
+
+.start-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-name {
+  font-size: 1.125rem;
+  color: #facc15;
+  font-family: monospace;
+  margin-bottom: 1.5rem;
+}
+
+/* Instructions */
+.instructions {
+  text-align: left;
+  font-size: 0.875rem;
+  background: rgba(127, 29, 29, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.instruction-title {
+  font-weight: bold;
+  color: #f87171;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.instructions p {
+  color: #d1d5db;
+  margin-bottom: 0.25rem;
+}
+
+.danger {
+  color: #f87171;
+  font-weight: bold;
+}
+
+/* Controls Legend */
+.controls-legend {
+  text-align: left;
+  font-size: 0.875rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #374151;
+  margin-bottom: 1.5rem;
+}
+
+.legend-title {
+  color: #6b7280;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  color: #d1d5db;
+}
+
+.legend-grid span:nth-child(even) {
+  text-align: right;
+  color: #6b7280;
+}
+
+/* Color Selector */
+.color-selector {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.color-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.color-btn:hover {
+  transform: scale(1.1);
+}
+
+.color-btn.selected {
+  transform: scale(1.2);
+  border-color: white;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+/* Join Button */
+.join-button {
+  width: 100%;
+  background: linear-gradient(to right, #ca8a04, #92400e);
+  color: white;
+  font-weight: bold;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 1.125rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.join-button:hover {
+  background: linear-gradient(to right, #eab308, #b45309);
+  transform: translateY(-2px);
+}
+
+.error-message {
+  color: #f87171;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.error-message.hidden {
+  display: none;
+}
+
+/* Leaderboard */
+.leaderboard-panel {
+  align-self: flex-end;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  backdrop-filter: blur(4px);
+  min-width: 15rem;
+  border: 1px solid #1f2937;
+  pointer-events: auto;
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.leaderboard-header h3 {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.leaderboard-header span {
+  font-size: 0.625rem;
+  color: #4b5563;
+}
+
+#leaderboard {
+  list-style: none;
+  font-size: 0.875rem;
+}
+
+#leaderboard li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem;
+  color: #d1d5db;
+}
+
+#leaderboard li.local-player {
+  color: #facc15;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.25rem;
+}
+
+#leaderboard li.separator {
+  justify-content: center;
+  color: #4b5563;
+  font-size: 0.75rem;
+}
+
+#leaderboard li.placeholder {
+  color: #6b7280;
+  font-style: italic;
+}
+
+#leaderboard .player-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+#leaderboard .rank {
+  font-size: 0.625rem;
+  width: 1rem;
+  color: #6b7280;
+}
+
+#leaderboard .name {
+  max-width: 6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#leaderboard .rating {
+  color: #9ca3af;
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+/* Shake Animation */
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+body.shake {
+  animation: shake 0.5s;
+}

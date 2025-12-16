@@ -1,0 +1,1 @@
+export { InputHandler } from './handler';

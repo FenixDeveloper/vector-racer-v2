@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector Racer</title>
+    <link rel="stylesheet" href="/src/styles/main.css">
+</head>
+<body>
+    <!-- Game Canvas -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- UI Overlay -->
+    <div id="ui-layer">
+        <!-- Top HUD -->
+        <div class="hud-top">
+            <div class="hud-panel hud-left">
+                <h1 class="game-title">Vector Racer</h1>
+                <div class="status-bar">
+                    <span id="status-txt">Connecting...</span>
+                    <div id="turn-indicator" class="turn-warning hidden">
+                        <span>SHARP TURN</span>
+                        <span id="turn-direction"></span>
+                    </div>
+                </div>
+                <div class="control-mode">
+                    Control: <span id="control-mode-display">KEYBOARD</span> (Space to Toggle)
+                </div>
+            </div>
+
+            <div class="hud-panel hud-right">
+                <div class="rating-label">Current Rating</div>
+                <div class="rating-value" id="rating-display">0</div>
+                <div class="speed-value" id="speed-display">0 km/h</div>
+            </div>
+        </div>
+
+        <!-- Wasted Screen -->
+        <div id="wasted-screen" class="overlay-screen hidden">
+            <h1 class="wasted-title">Wasted</h1>
+            <div class="wasted-subtitle">RATING RESET TO ZERO</div>
+            <p class="respawn-text">Respawning...</p>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay-screen">
+            <div class="start-panel">
+                <h2 class="start-title">Join the Race</h2>
+                <div class="welcome-name" id="welcome-name">Detecting Driver...</div>
+
+                <div class="instructions">
+                    <p class="instruction-title">Objective: Maximum Rating</p>
+                    <p>Speed Multiplier: Rating grows exponentially with speed.</p>
+                    <p>High Stakes: If you crash, <span class="danger">RATING FALLS TO ZERO</span>.</p>
+                </div>
+
+                <div class="controls-legend">
+                    <div class="legend-title">Controls</div>
+                    <div class="legend-grid">
+                        <span>Arrow Keys / WASD</span> <span>Move</span>
+                        <span>Mouse</span> <span>Steer & Accelerate</span>
+                        <span>Space</span> <span>Toggle Control Mode</span>
+                    </div>
+                </div>
+
+                <div class="color-selector" id="color-selector"></div>
+
+                <button id="join-btn" class="join-button">Ignite Engine</button>
+                <p id="error-msg" class="error-message hidden"></p>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="leaderboard-panel">
+            <div class="leaderboard-header">
+                <h3>Live Ratings</h3>
+                <span>Top 10</span>
+            </div>
+            <ul id="leaderboard">
+                <li class="placeholder">Connecting...</li>
+            </ul>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
