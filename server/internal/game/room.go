@@ -126,6 +126,14 @@ func (r *Room) AddPlayer(sessionID, name string, color uint8, conn PlayerConnect
 	roomInfo := r.protocol.EncodeRoomInfo(r.ID, uint8(len(r.players)), config.MaxPlayersPerRoom, id)
 	player.Connection.Send(roomInfo)
 
+	// Send info about existing players to the new player
+	for existingID, existingPlayer := range r.players {
+		if existingID != id {
+			existingJoinMsg := r.protocol.EncodePlayerJoin(existingID, existingPlayer.Name, existingPlayer.Color)
+			player.Connection.Send(existingJoinMsg)
+		}
+	}
+
 	log.Printf("Player %s (ID: %d) joined room %s", name, id, r.ID)
 
 	return player, nil
