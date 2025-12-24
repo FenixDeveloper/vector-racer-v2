@@ -139,15 +139,16 @@ func (s *GameServer) Start() error {
 		}
 	}()
 
-	// Background task: Log server statistics every 60 seconds
-	// Useful for monitoring server health
+	// Background task: Log server statistics every 5 minutes (only when active)
 	go func() {
-		ticker := time.NewTicker(60 * time.Second)
+		ticker := time.NewTicker(5 * time.Minute)
 		defer ticker.Stop()
 
 		for range ticker.C {
 			stats := s.matchmaker.GetStats()
-			log.Printf("Stats: %d rooms, %d total players", stats.TotalRooms, stats.TotalPlayers)
+			if stats.TotalRooms > 0 || stats.TotalPlayers > 0 {
+				log.Printf("Stats: %d rooms, %d total players", stats.TotalRooms, stats.TotalPlayers)
+			}
 		}
 	}()
 
