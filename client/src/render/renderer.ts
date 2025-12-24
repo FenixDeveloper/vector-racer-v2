@@ -79,8 +79,9 @@ export class Renderer {
       if (screenY < -segmentHeight || screenY > this.canvas.height + segmentHeight) continue;
 
       const camX = localPlayer.x;
-      const drawX = (this.canvas.width / 2) + (getRoadCurve(y) - camX) + camera.shakeX;
-      const drawY = screenY + camera.shakeY;
+      // Round to prevent sub-pixel jitter causing road segments to shift
+      const drawX = Math.round((this.canvas.width / 2) + (getRoadCurve(y) - camX) + camera.shakeX);
+      const drawY = Math.round(screenY + camera.shakeY);
 
       const segmentIndex = Math.floor(y / segmentHeight);
       const isDark = segmentIndex % 2 === 0;

@@ -289,6 +289,13 @@ func (r *Room) updatePhysics(dt float64) {
 		result = r.antiCheat.ValidatePosition(p)
 		r.antiCheat.ApplyValidationResult(p, result)
 	}
+
+	// Check for auto-respawn
+	for _, p := range players {
+		if p.ShouldRespawn() {
+			p.Respawn()
+		}
+	}
 }
 
 // broadcastState sends the current game state to all players.

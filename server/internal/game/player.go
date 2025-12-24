@@ -62,6 +62,7 @@ type Player struct {
 	LastInputTime time.Time
 	ConnectedAt   time.Time
 	LastSyncTime  time.Time
+	ExplodedAt    time.Time // When player exploded (for auto-respawn)
 }
 
 // PlayerConnection interface for network abstraction
@@ -144,7 +145,7 @@ func (p *Player) PopInput() (PlayerInput, bool) {
 	return input, true
 }
 
-// Respawn respawns the player at road center
+// Respawn respawns the player at road center, moved forward to safe position
 func (p *Player) Respawn() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -152,7 +153,20 @@ func (p *Player) Respawn() {
 	p.Exploded = false
 	p.Speed = 0
 	p.Angle = 0
+	// Move forward to avoid dying at same dangerous curve
+	p.Y += 200
 	p.X = config.GetRoadCurve(p.Y)
+}
+
+// ShouldRespawn checks if player should auto-respawn (after delay)
+func (p *Player) ShouldRespawn() bool {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+
+	if !p.Exploded {
+		return false
+	}
+	return time.Since(p.ExplodedAt) >= config.RespawnDelay
 }
 
 // Explode triggers player explosion
@@ -166,6 +180,7 @@ func (p *Player) Explode() {
 
 	p.Exploded = true
 	p.Rating = 0
+	p.ExplodedAt = time.Now()
 }
 
 // UpdateRating updates player rating based on speed

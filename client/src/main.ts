@@ -276,8 +276,7 @@ class Game {
 
       // Schedule respawn
       setTimeout(() => {
-        const roadCenterX = getRoadCurve(localPlayer.y);
-        this.stateManager.respawnPlayer(roadCenterX);
+        this.stateManager.respawnPlayer(getRoadCurve);
         this.screens.hideWastedScreen();
       }, CONFIG.RESPAWN_DELAY_MS);
     }

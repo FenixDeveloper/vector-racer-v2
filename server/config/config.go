@@ -1,6 +1,9 @@
 package config
 
-import "math"
+import (
+	"math"
+	"time"
+)
 
 // Game constants - must match client exactly for deterministic physics
 const (
@@ -48,6 +51,9 @@ const (
 	MaxViolations      = 5
 	SpeedTolerance     = 1.1 // 10% tolerance
 	MaxInputsPerTick   = 3
+
+	// Respawn
+	RespawnDelay = 2500 * time.Millisecond // 2.5 seconds
 )
 
 // Server configuration
