@@ -59,10 +59,6 @@ export class Renderer {
     }
   }
 
-  // Smoothed camera position for less jerky road rendering
-  private smoothCamX: number = 0;
-  private smoothCamY: number = 0;
-
   // Draw the road
   private drawRoad(camY: number): void {
     const totalHeight = this.canvas.height;
@@ -70,30 +66,24 @@ export class Renderer {
     const drawDistance = totalHeight + 400;
     const { camera, localPlayer } = this.stateManager.gameState;
 
-    // Smooth camera follow (prevents jerky road movement)
-    const smoothFactor = 0.3; // Higher = faster follow, lower = smoother
-    if (this.smoothCamX === 0) {
-      this.smoothCamX = localPlayer.x;
-      this.smoothCamY = camY;
-    } else {
-      this.smoothCamX += (localPlayer.x - this.smoothCamX) * smoothFactor;
-      this.smoothCamY += (camY - this.smoothCamY) * smoothFactor;
-    }
+    // Use raw camera - no smoothing (test)
+    const useCamX = localPlayer.x;
+    const useCamY = camY;
 
-    const startY = Math.floor((this.smoothCamY - totalHeight * CONFIG.CAMERA_Y_OFFSET) / segmentHeight) * segmentHeight;
+    const startY = Math.floor((useCamY - totalHeight * CONFIG.CAMERA_Y_OFFSET) / segmentHeight) * segmentHeight;
 
     // Background
     this.ctx.fillStyle = '#064e3b';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     for (let y = startY; y < startY + drawDistance; y += segmentHeight) {
-      const relY = y - this.smoothCamY;
+      const relY = y - useCamY;
       const screenY = this.canvas.height * CONFIG.CAMERA_Y_OFFSET - relY;
 
       if (screenY < -segmentHeight || screenY > this.canvas.height + segmentHeight) continue;
 
-      // Use smoothed camera X for stable road rendering
-      const drawX = Math.round((this.canvas.width / 2) + (getRoadCurve(y) - this.smoothCamX) + camera.shakeX);
+      // Use raw camera X
+      const drawX = Math.round((this.canvas.width / 2) + (getRoadCurve(y) - useCamX) + camera.shakeX);
       const drawY = Math.round(screenY + camera.shakeY);
 
       const segmentIndex = Math.floor(y / segmentHeight);

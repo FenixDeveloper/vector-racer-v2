@@ -26,6 +26,8 @@ class Game {
   private lastTime = 0;
   private lastSyncTime = 0;
   private animationFrameId: number | null = null;
+  private physicsAccumulator = 0;
+  private readonly PHYSICS_STEP = 1 / 60; // Fixed 60Hz physics
 
   constructor() {
     // Get canvas
@@ -55,13 +57,11 @@ class Game {
   private createNetworkCallbacks(): NetworkCallbacks {
     return {
       onConnect: () => {
-        console.log('Connected to server');
         this.stateManager.setConnected(true);
         this.hud.setStatus('Connected');
       },
 
       onDisconnect: () => {
-        console.log('Disconnected from server');
         this.stateManager.setConnected(false);
         this.hud.setStatus('Disconnected');
         this.stopGame();
@@ -80,11 +80,10 @@ class Game {
             const dx = Math.abs(local.x - p.x);
             const dy = Math.abs(local.y - p.y);
 
-            if (dx > 50 || dy > 100) {
-              // Server correction - rubberband
-              local.x = p.x;
-              local.y = p.y;
-            }
+            // Smooth correction toward server position (no hard snaps)
+            const correctionSpeed = 0.1; // 10% per update toward server
+            local.x += (p.x - local.x) * correctionSpeed;
+            local.y += (p.y - local.y) * correctionSpeed;
 
             // Always sync rating from server
             local.rating = p.rating;
@@ -116,7 +115,6 @@ class Game {
       },
 
       onPlayerJoin: (id: number, name: string, color: number) => {
-        console.log(`Player joined: ${name} (${id})`);
         this.stateManager.updateRemotePlayer(id, {
           name,
           color: protocol.getColorHex(color),
@@ -124,25 +122,21 @@ class Game {
       },
 
       onPlayerLeave: (id: number) => {
-        console.log(`Player left: ${id}`);
         this.stateManager.removeRemotePlayer(id);
         this.leaderboard.update();
       },
 
       onRoomInfo: (roomId: string, playerCount: number, maxPlayers: number, yourId: number) => {
-        console.log(`Joined room ${roomId} (${playerCount}/${maxPlayers}), your ID: ${yourId}`);
         this.stateManager.setPlayerId(yourId);
         this.hud.setStatus(`Room: ${roomId.slice(0, 8)}`);
       },
 
       onError: (code: number, message: string) => {
-        console.error(`Server error ${code}: ${message}`);
         this.screens.showError(message);
       },
 
-      onLatencyUpdate: (latency: number) => {
+      onLatencyUpdate: (_latency: number) => {
         // Could display latency in UI if needed
-        console.log(`Latency: ${latency}ms`);
       },
     };
   }
@@ -220,17 +214,23 @@ class Game {
   private gameLoop(timestamp: number): void {
     if (!this.stateManager.isRunning) return;
 
-    // Calculate delta time
-    const dt = Math.min((timestamp - this.lastTime) / 1000, 0.1);
+    // Calculate delta time and accumulate
+    const frameTime = Math.min((timestamp - this.lastTime) / 1000, 0.1);
     this.lastTime = timestamp;
+    this.physicsAccumulator += frameTime;
 
     // Handle explosion and respawn
     this.handleExplosionState();
 
-    // Update physics
-    this.physics.update(dt, this.canvas);
+    // Fixed timestep physics - run multiple steps if needed
+    while (this.physicsAccumulator >= this.PHYSICS_STEP) {
+      this.physics.update(this.PHYSICS_STEP, this.canvas);
+      this.physicsAccumulator -= this.PHYSICS_STEP;
+    }
+
+    // These can run at variable rate
     this.physics.updateRemotePlayers();
-    this.physics.updateParticles(dt);
+    this.physics.updateParticles(frameTime);
 
     // Predict turns
     const turnPrediction = this.physics.predictTurn();
@@ -290,9 +290,6 @@ class Game {
 
   // Initialize and start
   async init(): Promise<void> {
-    console.log('Vector Racer Client initialized');
-    console.log(`Server URL: ${CONFIG.SERVER_URL}`);
-
     // Pre-connect to server
     this.network.connect();
   }
