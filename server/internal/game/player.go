@@ -1,6 +1,7 @@
 package game
 
 import (
+	"log"
 	"sync"
 	"time"
 
@@ -145,7 +146,7 @@ func (p *Player) PopInput() (PlayerInput, bool) {
 	return input, true
 }
 
-// Respawn respawns the player at road center, moved forward to safe position
+// Respawn respawns the player at road center
 func (p *Player) Respawn() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -153,9 +154,15 @@ func (p *Player) Respawn() {
 	p.Exploded = false
 	p.Speed = 0
 	p.Angle = 0
-	// Move forward to avoid dying at same dangerous curve
-	p.Y += 200
-	p.X = config.GetRoadCurve(p.Y)
+	newX := config.GetRoadCurve(p.Y)
+	p.X = newX
+
+	// Update anti-cheat baseline to prevent rubberband after respawn
+	p.LastValidX = p.X
+	p.LastValidY = p.Y
+	p.Violations = 0
+
+	log.Printf("Player %s (ID: %d) respawned at Y=%.0f, X=%.0f", p.Name, p.ID, p.Y, p.X)
 }
 
 // ShouldRespawn checks if player should auto-respawn (after delay)
@@ -181,6 +188,7 @@ func (p *Player) Explode() {
 	p.Exploded = true
 	p.Rating = 0
 	p.ExplodedAt = time.Now()
+	log.Printf("Player %s (ID: %d) exploded at Y=%.0f", p.Name, p.ID, p.Y)
 }
 
 // UpdateRating updates player rating based on speed

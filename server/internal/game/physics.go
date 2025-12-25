@@ -1,7 +1,9 @@
 package game
 
 import (
+	"log"
 	"math"
+	"time"
 
 	"github.com/race/server/config"
 )
@@ -65,8 +67,12 @@ func (ph *Physics) UpdatePlayer(p *Player, dt float64) {
 
 	// Explosion check
 	if edgeDist > config.RoadWidth*config.ExplosionTolerance {
-		p.Exploded = true
-		p.Rating = 0
+		if !p.Exploded {
+			p.Exploded = true
+			p.Rating = 0
+			p.ExplodedAt = time.Now()
+			log.Printf("Player %d exploded: X=%.0f, roadCenter=%.0f, edgeDist=%.0f", p.ID, p.X, roadCenter, edgeDist)
+		}
 		return
 	}
 
@@ -118,6 +124,8 @@ func (ph *Physics) UpdatePlayer(p *Player, dt float64) {
 		speedFactor := p.Speed / 100.0
 		p.Rating += (speedFactor * speedFactor) * dt * 0.5
 	}
+
+
 }
 
 // CheckCollision checks and resolves collision between two players

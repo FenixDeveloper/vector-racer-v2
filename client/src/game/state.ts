@@ -177,13 +177,11 @@ export class GameStateManager {
     this.state.localPlayer.rating = 0;
   }
 
-  // Respawn player - move forward to avoid dying at same spot
+  // Respawn player at road center
   respawnPlayer(getRoadCurve: (y: number) => number): void {
     this.state.localPlayer.exploded = false;
     this.state.localPlayer.speed = 0;
     this.state.localPlayer.angle = 0;
-    // Move forward to safe position (must match server: Y += 200)
-    this.state.localPlayer.y += 200;
     this.state.localPlayer.x = getRoadCurve(this.state.localPlayer.y);
   }
 
