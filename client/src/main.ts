@@ -76,11 +76,8 @@ class Game {
           if (p.id === this.stateManager.localPlayer.id) {
             // Update local player from server (authoritative)
             // Only update position if significantly different (anti-cheat correction)
-            const local = this.stateManager.localPlayer;
-            const dx = Math.abs(local.x - p.x);
-            const dy = Math.abs(local.y - p.y);
-
             // Smooth correction toward server position (no hard snaps)
+            const local = this.stateManager.localPlayer;
             const correctionSpeed = 0.1; // 10% per update toward server
             local.x += (p.x - local.x) * correctionSpeed;
             local.y += (p.y - local.y) * correctionSpeed;
@@ -126,12 +123,12 @@ class Game {
         this.leaderboard.update();
       },
 
-      onRoomInfo: (roomId: string, playerCount: number, maxPlayers: number, yourId: number) => {
+      onRoomInfo: (roomId: string, _playerCount: number, _maxPlayers: number, yourId: number) => {
         this.stateManager.setPlayerId(yourId);
         this.hud.setStatus(`Room: ${roomId.slice(0, 8)}`);
       },
 
-      onError: (code: number, message: string) => {
+      onError: (_code: number, message: string) => {
         this.screens.showError(message);
       },
 
