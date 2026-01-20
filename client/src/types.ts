@@ -36,7 +36,7 @@ export interface MouseState {
   y: number;
 }
 
-export type ControlMode = 'keyboard' | 'mouse';
+export type ControlMode = 'keyboard' | 'mouse' | 'joystick' | 'tilt';
 
 // Particle system
 export interface Particle {

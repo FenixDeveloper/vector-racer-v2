@@ -1,5 +1,6 @@
 import { GameStateManager } from '@/game/state';
 import { LeaderboardEntry } from '@/types';
+import { LANG } from '@/lang';
 
 export class Leaderboard {
   private stateManager: GameStateManager;
@@ -75,7 +76,7 @@ export class Leaderboard {
       `;
     }
 
-    this.element.innerHTML = html || '<li class="placeholder">No players</li>';
+    this.element.innerHTML = html || `<li class="placeholder">${LANG.noPlayers}</li>`;
   }
 
   // Escape HTML to prevent XSS

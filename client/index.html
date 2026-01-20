@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vector Racer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Вектор Гонки</title>
     <link rel="stylesheet" href="/src/styles/main.css">
 </head>
 <body>
@@ -15,57 +15,66 @@
         <!-- Top HUD -->
         <div class="hud-top">
             <div class="hud-panel hud-left">
-                <h1 class="game-title">Vector Racer</h1>
+                <h1 class="game-title">Вектор Гонки</h1>
                 <div class="status-bar">
-                    <span id="status-txt">Connecting...</span>
+                    <span id="status-txt">Подключение...</span>
                     <div id="turn-indicator" class="turn-warning hidden">
-                        <span>SHARP TURN</span>
+                        <span id="turn-label">РЕЗКИЙ ПОВОРОТ</span>
                         <span id="turn-direction"></span>
                     </div>
                 </div>
-                <div class="control-mode">
-                    Control: <span id="control-mode-display">KEYBOARD</span> (Space to Toggle)
+                <div class="control-mode" id="control-mode-hint">
+                    Управление: <span id="control-mode-display">КЛАВИАТУРА</span> (Пробел для переключения)
                 </div>
             </div>
 
             <div class="hud-panel hud-right">
-                <div class="rating-label">Current Rating</div>
+                <div class="rating-label" id="rating-label">Текущий рейтинг</div>
                 <div class="rating-value" id="rating-display">0</div>
-                <div class="speed-value" id="speed-display">0 km/h</div>
+                <div class="speed-value" id="speed-display">0 км/ч</div>
             </div>
         </div>
 
         <!-- Wasted Screen -->
         <div id="wasted-screen" class="overlay-screen hidden">
-            <h1 class="wasted-title">Wasted</h1>
-            <div class="wasted-subtitle">RATING RESET TO ZERO</div>
-            <p class="respawn-text">Respawning...</p>
+            <h1 class="wasted-title" id="wasted-title">Крушение</h1>
+            <div class="wasted-subtitle" id="wasted-subtitle">РЕЙТИНГ СБРОШЕН НА НОЛЬ</div>
+            <p class="respawn-text" id="respawn-text">Возрождение...</p>
         </div>
 
         <!-- Start Screen -->
         <div id="start-screen" class="overlay-screen">
             <div class="start-panel">
-                <h2 class="start-title">Join the Race</h2>
-                <div class="welcome-name" id="welcome-name">Detecting Driver...</div>
+                <h2 class="start-title" id="start-title">Присоединиться к гонке</h2>
+                <div class="welcome-name" id="welcome-name">Определение гонщика...</div>
 
                 <div class="instructions">
-                    <p class="instruction-title">Objective: Maximum Rating</p>
-                    <p>Speed Multiplier: Rating grows exponentially with speed.</p>
-                    <p>High Stakes: If you crash, <span class="danger">RATING FALLS TO ZERO</span>.</p>
+                    <p class="instruction-title" id="objective-text">Цель: Максимальный рейтинг</p>
+                    <p id="speed-multiplier-text">Множитель скорости: Рейтинг растёт экспоненциально со скоростью.</p>
+                    <p id="high-stakes-text">Высокие ставки: При аварии <span class="danger">РЕЙТИНГ ПАДАЕТ ДО НУЛЯ</span>.</p>
                 </div>
 
-                <div class="controls-legend">
-                    <div class="legend-title">Controls</div>
+                <div class="controls-legend desktop-controls" id="desktop-controls">
+                    <div class="legend-title" id="controls-title">Управление</div>
                     <div class="legend-grid">
-                        <span>Arrow Keys / WASD</span> <span>Move</span>
-                        <span>Mouse</span> <span>Steer & Accelerate</span>
-                        <span>Space</span> <span>Toggle Control Mode</span>
+                        <span>Стрелки / WASD</span> <span>Движение</span>
+                        <span>Мышь</span> <span>Руление и газ</span>
+                        <span>Пробел</span> <span>Переключение режима</span>
+                    </div>
+                </div>
+
+                <div class="controls-legend mobile-controls hidden" id="mobile-controls">
+                    <div class="legend-title">Управление</div>
+                    <div class="legend-grid">
+                        <span>Джойстик</span> <span>Движение</span>
+                        <span>Наклон телефона</span> <span>Руление</span>
+                        <span>Нажмите</span> <span>Переключение режима</span>
                     </div>
                 </div>
 
                 <div class="color-selector" id="color-selector"></div>
 
-                <button id="join-btn" class="join-button">Ignite Engine</button>
+                <button id="join-btn" class="join-button">Запустить двигатель</button>
                 <p id="error-msg" class="error-message hidden"></p>
             </div>
         </div>
@@ -73,13 +82,24 @@
         <!-- Leaderboard -->
         <div class="leaderboard-panel">
             <div class="leaderboard-header">
-                <h3>Live Ratings</h3>
-                <span>Top 10</span>
+                <h3 id="leaderboard-title">Рейтинг онлайн</h3>
+                <span id="leaderboard-subtitle">Топ 10</span>
             </div>
             <ul id="leaderboard">
-                <li class="placeholder">Connecting...</li>
+                <li class="placeholder">Подключение...</li>
             </ul>
         </div>
+
+        <!-- Mobile Controls -->
+        <div id="mobile-joystick" class="mobile-joystick hidden">
+            <div class="joystick-base">
+                <div class="joystick-knob"></div>
+            </div>
+        </div>
+
+        <button id="mobile-mode-toggle" class="mobile-mode-toggle hidden">
+            <span id="mobile-mode-icon">🎮</span>
+        </button>
     </div>
 
     <script type="module" src="/src/main.ts"></script>

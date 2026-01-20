@@ -1,3 +1,5 @@
+import { LANG } from './lang';
+
 // Game configuration - must match server exactly for deterministic physics
 
 // Dynamically determine WebSocket URL based on current location
@@ -68,13 +70,10 @@ export function getRoadCurve(worldY: number): number {
   return baseCurve + sharpTurn;
 }
 
-// Name generation
-const ADJECTIVES = ['Swift', 'Turbo', 'Neon', 'Iron', 'Cyber', 'Rogue', 'Apex', 'Ghost', 'Hyper', 'Shadow', 'Rapid', 'Drifting', 'Electric'];
-const ANIMALS = ['Fox', 'Hawk', 'Bear', 'Wolf', 'Tiger', 'Eagle', 'Shark', 'Falcon', 'Cobra', 'Viper', 'Badger', 'Panda', 'Lynx'];
-
+// Name generation using localized strings
 export function generateName(): string {
-  const adj = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
-  const ani = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+  const adj = LANG.adjectives[Math.floor(Math.random() * LANG.adjectives.length)];
+  const ani = LANG.animals[Math.floor(Math.random() * LANG.animals.length)];
   return `${adj} ${ani}`;
 }
 

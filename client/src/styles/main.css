@@ -447,3 +447,391 @@ canvas {
 body.shake {
   animation: shake 0.5s;
 }
+
+/* Mobile Controls Visibility */
+.mobile-controls {
+  display: none;
+}
+
+.desktop-controls {
+  display: block;
+}
+
+/* Mobile Joystick */
+.mobile-joystick {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  pointer-events: auto;
+  touch-action: none;
+  z-index: 100;
+}
+
+.mobile-joystick.hidden {
+  display: none;
+}
+
+.joystick-base {
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.joystick-knob {
+  width: 50px;
+  height: 50px;
+  background: rgba(234, 179, 8, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  position: absolute;
+  transition: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile Mode Toggle Button */
+.mobile-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(234, 179, 8, 0.5);
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.mobile-mode-toggle.hidden {
+  display: none;
+}
+
+.mobile-mode-toggle:active {
+  background: rgba(234, 179, 8, 0.3);
+  transform: scale(0.95);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  /* UI Layer padding */
+  #ui-layer {
+    padding: 0.5rem;
+  }
+
+  /* HUD adjustments */
+  .hud-top {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .hud-panel {
+    padding: 0.5rem;
+  }
+
+  .hud-left {
+    order: 2;
+    width: 100%;
+  }
+
+  .hud-right {
+    order: 1;
+    align-self: flex-end;
+    text-align: right;
+  }
+
+  /* Title smaller on mobile */
+  .game-title {
+    font-size: 1rem;
+  }
+
+  /* Rating display smaller */
+  .rating-value {
+    font-size: 1.75rem;
+  }
+
+  .rating-label {
+    font-size: 0.625rem;
+  }
+
+  .speed-value {
+    font-size: 0.75rem;
+  }
+
+  /* Control mode hint smaller */
+  .control-mode {
+    font-size: 0.5rem;
+  }
+
+  /* Status bar smaller */
+  .status-bar {
+    font-size: 0.625rem;
+  }
+
+  /* Turn warning smaller */
+  .turn-warning {
+    font-size: 0.625rem;
+    padding: 0.1rem 0.375rem;
+  }
+
+  /* Wasted screen adjustments */
+  .wasted-title {
+    font-size: 2.5rem;
+  }
+
+  .wasted-subtitle {
+    font-size: 1rem;
+  }
+
+  .respawn-text {
+    font-size: 1rem;
+  }
+
+  /* Start screen adjustments */
+  .start-panel {
+    padding: 1rem;
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+
+  .start-title {
+    font-size: 1.25rem;
+  }
+
+  .welcome-name {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Instructions smaller */
+  .instructions {
+    font-size: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .instruction-title {
+    font-size: 0.625rem;
+  }
+
+  /* Controls legend */
+  .controls-legend {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .legend-title {
+    font-size: 0.625rem;
+  }
+
+  .legend-grid {
+    gap: 0.25rem;
+  }
+
+  /* Color selector smaller */
+  .color-selector {
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .color-btn {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  /* Join button */
+  .join-button {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  /* Leaderboard adjustments */
+  .leaderboard-panel {
+    min-width: auto;
+    max-width: 50%;
+    padding: 0.5rem;
+  }
+
+  .leaderboard-header h3 {
+    font-size: 0.625rem;
+  }
+
+  .leaderboard-header span {
+    font-size: 0.5rem;
+  }
+
+  #leaderboard {
+    font-size: 0.75rem;
+  }
+
+  #leaderboard li {
+    padding: 0.125rem;
+  }
+
+  #leaderboard .name {
+    max-width: 4rem;
+  }
+
+  #leaderboard .rating {
+    font-size: 0.625rem;
+  }
+
+  #leaderboard .rank {
+    font-size: 0.5rem;
+    width: 0.875rem;
+  }
+
+  /* Show mobile controls, hide desktop */
+  .mobile-controls {
+    display: block;
+  }
+
+  .desktop-controls {
+    display: none;
+  }
+}
+
+/* Extra small screens (phones in portrait) */
+@media (max-width: 480px) {
+  .start-panel {
+    padding: 0.75rem;
+  }
+
+  .start-title {
+    font-size: 1.125rem;
+  }
+
+  .wasted-title {
+    font-size: 2rem;
+  }
+
+  .rating-value {
+    font-size: 1.5rem;
+  }
+
+  /* Joystick smaller on very small screens */
+  .joystick-base {
+    width: 100px;
+    height: 100px;
+  }
+
+  .joystick-knob {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobile-joystick {
+    bottom: 1.5rem;
+    left: 1.5rem;
+  }
+
+  .mobile-mode-toggle {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  /* Leaderboard even smaller */
+  .leaderboard-panel {
+    max-width: 40%;
+    padding: 0.375rem;
+  }
+
+  #leaderboard .name {
+    max-width: 3rem;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hud-top {
+    flex-direction: row;
+  }
+
+  .hud-left {
+    order: 1;
+    width: auto;
+  }
+
+  .hud-right {
+    order: 2;
+  }
+
+  .start-panel {
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 0.75rem;
+  }
+
+  .start-title {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .welcome-name {
+    margin-bottom: 0.5rem;
+  }
+
+  .instructions {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .controls-legend {
+    margin-bottom: 0.5rem;
+  }
+
+  .color-selector {
+    margin-bottom: 0.5rem;
+  }
+
+  .wasted-title {
+    font-size: 2rem;
+  }
+
+  .wasted-subtitle {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .respawn-text {
+    font-size: 0.875rem;
+  }
+
+  .mobile-joystick {
+    bottom: 1rem;
+    left: 1rem;
+  }
+
+  .joystick-base {
+    width: 80px;
+    height: 80px;
+  }
+
+  .joystick-knob {
+    width: 35px;
+    height: 35px;
+  }
+
+  .mobile-mode-toggle {
+    width: 45px;
+    height: 45px;
+    font-size: 1rem;
+    bottom: 1rem;
+    right: 1rem;
+  }
+}

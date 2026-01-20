@@ -96,15 +96,24 @@ export class GameStateManager {
     return this.colorIndex;
   }
 
-  // Toggle control mode
-  toggleControlMode(): ControlMode {
-    this.state.controlMode = this.state.controlMode === 'keyboard' ? 'mouse' : 'keyboard';
+  // Toggle control mode (desktop: keyboard <-> mouse, mobile: joystick <-> tilt)
+  toggleControlMode(isMobile: boolean = false): ControlMode {
+    if (isMobile) {
+      this.state.controlMode = this.state.controlMode === 'joystick' ? 'tilt' : 'joystick';
+    } else {
+      this.state.controlMode = this.state.controlMode === 'keyboard' ? 'mouse' : 'keyboard';
+    }
     return this.state.controlMode;
   }
 
-  // Force keyboard mode (after crash)
-  forceKeyboardMode(): void {
-    this.state.controlMode = 'keyboard';
+  // Set control mode directly
+  setControlMode(mode: ControlMode): void {
+    this.state.controlMode = mode;
+  }
+
+  // Force keyboard/joystick mode (after crash or on start)
+  forceDefaultMode(isMobile: boolean = false): void {
+    this.state.controlMode = isMobile ? 'joystick' : 'keyboard';
   }
 
   // Set connection state

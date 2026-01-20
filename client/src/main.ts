@@ -11,6 +11,7 @@ import { HUD } from './ui/hud';
 import { Leaderboard } from './ui/leaderboard';
 import { Screens } from './ui/screens';
 import { NetworkPlayerData } from './types';
+import { LANG } from './lang';
 
 class Game {
   private canvas: HTMLCanvasElement;
@@ -58,12 +59,12 @@ class Game {
     return {
       onConnect: () => {
         this.stateManager.setConnected(true);
-        this.hud.setStatus('Connected');
+        this.hud.setStatus(LANG.connected);
       },
 
       onDisconnect: () => {
         this.stateManager.setConnected(false);
-        this.hud.setStatus('Disconnected');
+        this.hud.setStatus(LANG.disconnected);
         this.stopGame();
         this.screens.showStartScreen();
       },
@@ -125,7 +126,7 @@ class Game {
 
       onRoomInfo: (roomId: string, _playerCount: number, _maxPlayers: number, yourId: number) => {
         this.stateManager.setPlayerId(yourId);
-        this.hud.setStatus(`Room: ${roomId.slice(0, 8)}`);
+        this.hud.setStatus(`${LANG.room}: ${roomId.slice(0, 8)}`);
       },
 
       onError: (_code: number, message: string) => {
@@ -190,6 +191,9 @@ class Game {
     this.screens.hideStartScreen();
     this.hud.setControlMode(this.stateManager.controlMode);
 
+    // Show mobile controls if on mobile
+    this.inputHandler.showMobileControls();
+
     // Start game loop
     this.lastTime = performance.now();
     this.gameLoop(this.lastTime);
@@ -203,6 +207,9 @@ class Game {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }
+
+    // Hide mobile controls
+    this.inputHandler.hideMobileControls();
 
     this.network.leaveRoom();
   }

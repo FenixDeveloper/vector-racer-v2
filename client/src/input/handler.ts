@@ -1,8 +1,12 @@
 import { GameStateManager } from '@/game/state';
+import { ControlMode } from '@/types';
+import { TouchController } from './touch';
 
 export class InputHandler {
   private stateManager: GameStateManager;
   private canvas: HTMLCanvasElement;
+  private touchController: TouchController | null = null;
+  private isMobile: boolean;
 
   // Key mapping
   private keyMap: Record<string, keyof typeof this.stateManager.gameState.keys> = {
@@ -17,19 +21,53 @@ export class InputHandler {
   };
 
   // Callbacks
-  private onControlModeChange?: (mode: 'keyboard' | 'mouse') => void;
+  private onControlModeChange?: (mode: ControlMode) => void;
 
   constructor(stateManager: GameStateManager, canvas: HTMLCanvasElement) {
     this.stateManager = stateManager;
     this.canvas = canvas;
+    this.isMobile = TouchController.isTouchDevice();
   }
 
   // Initialize input handlers
   init(): void {
+    // Always setup keyboard/mouse for devices that have both
     window.addEventListener('keydown', this.handleKeyDown.bind(this));
     window.addEventListener('keyup', this.handleKeyUp.bind(this));
     window.addEventListener('mousemove', this.handleMouseMove.bind(this));
     window.addEventListener('blur', this.handleBlur.bind(this));
+
+    // Setup touch controls if on mobile
+    if (this.isMobile) {
+      this.touchController = new TouchController();
+      this.touchController.init();
+      this.touchController.setOnModeChange((mode) => {
+        this.stateManager.setControlMode(mode);
+        this.onControlModeChange?.(mode);
+      });
+
+      // Set initial mobile control mode
+      const savedMode = localStorage.getItem('mobile_control_mode');
+      if (savedMode === 'joystick' || savedMode === 'tilt') {
+        this.stateManager.setControlMode(savedMode);
+      } else {
+        this.stateManager.setControlMode('joystick');
+      }
+    }
+  }
+
+  // Show mobile controls (call when game starts)
+  showMobileControls(): void {
+    if (this.touchController) {
+      this.touchController.show();
+    }
+  }
+
+  // Hide mobile controls (call when game stops)
+  hideMobileControls(): void {
+    if (this.touchController) {
+      this.touchController.hide();
+    }
   }
 
   // Cleanup
@@ -38,10 +76,14 @@ export class InputHandler {
     window.removeEventListener('keyup', this.handleKeyUp.bind(this));
     window.removeEventListener('mousemove', this.handleMouseMove.bind(this));
     window.removeEventListener('blur', this.handleBlur.bind(this));
+
+    if (this.touchController) {
+      this.touchController.destroy();
+    }
   }
 
   // Set control mode change callback
-  setOnControlModeChange(callback: (mode: 'keyboard' | 'mouse') => void): void {
+  setOnControlModeChange(callback: (mode: ControlMode) => void): void {
     this.onControlModeChange = callback;
   }
 
@@ -56,7 +98,7 @@ export class InputHandler {
     // Toggle control mode with Space
     if (e.code === 'Space') {
       e.preventDefault();
-      const newMode = this.stateManager.toggleControlMode();
+      const newMode = this.stateManager.toggleControlMode(this.isMobile);
 
       // Center mouse position when switching to mouse mode
       if (newMode === 'mouse') {
@@ -64,6 +106,11 @@ export class InputHandler {
           this.canvas.width / 2,
           this.canvas.height * 0.7
         );
+      }
+
+      // Toggle touch controller mode if on mobile
+      if (this.isMobile && this.touchController) {
+        this.touchController.toggleMode();
       }
 
       this.onControlModeChange?.(newMode);
@@ -102,26 +149,46 @@ export class InputHandler {
   getSteering(): number {
     const state = this.stateManager.gameState;
 
+    // Mobile touch controls
+    if (this.isMobile && this.touchController) {
+      const mode = state.controlMode;
+      if (mode === 'joystick' || mode === 'tilt') {
+        return this.touchController.steering;
+      }
+    }
+
+    // Desktop controls
     if (state.controlMode === 'keyboard') {
       if (state.keys.ArrowLeft) return -1;
       if (state.keys.ArrowRight) return 1;
       return 0;
-    } else {
+    } else if (state.controlMode === 'mouse') {
       const cx = this.canvas.width / 2;
       const dx = state.mouse.x - cx;
       return Math.min(1, Math.max(-1, dx / 250));
     }
+
+    return 0;
   }
 
   // Get current throttle value (-1 to 1) for network
   getThrottle(): number {
     const state = this.stateManager.gameState;
 
+    // Mobile touch controls
+    if (this.isMobile && this.touchController) {
+      const mode = state.controlMode;
+      if (mode === 'joystick' || mode === 'tilt') {
+        return this.touchController.throttle;
+      }
+    }
+
+    // Desktop controls
     if (state.controlMode === 'keyboard') {
       if (state.keys.ArrowUp) return 1;
       if (state.keys.ArrowDown) return -1;
       return 0;
-    } else {
+    } else if (state.controlMode === 'mouse') {
       const cy = this.canvas.height * 0.7;
       const dy = state.mouse.y - cy;
 
@@ -132,5 +199,12 @@ export class InputHandler {
       }
       return 0;
     }
+
+    return 0;
+  }
+
+  // Check if running on mobile device
+  isMobileDevice(): boolean {
+    return this.isMobile;
   }
 }

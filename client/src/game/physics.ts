@@ -171,9 +171,10 @@ export class Physics {
     // Explode player
     this.stateManager.explodePlayer();
 
-    // Switch to keyboard mode for safety
-    if (this.stateManager.controlMode === 'mouse') {
-      this.stateManager.forceKeyboardMode();
+    // Switch to keyboard/joystick mode for safety (not mouse/tilt)
+    const mode = this.stateManager.controlMode;
+    if (mode === 'mouse' || mode === 'tilt') {
+      this.stateManager.forceDefaultMode(mode === 'tilt');
     }
   }
 

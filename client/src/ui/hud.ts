@@ -1,4 +1,6 @@
 import { GameStateManager } from '@/game/state';
+import { ControlMode } from '@/types';
+import { LANG, getControlModeName } from '@/lang';
 
 export class HUD {
   private stateManager: GameStateManager;
@@ -29,7 +31,7 @@ export class HUD {
 
     // Update speed
     const speedKmh = Math.floor(Math.abs(localPlayer.speed / 10));
-    this.speedDisplay.textContent = `${speedKmh} km/h`;
+    this.speedDisplay.textContent = `${speedKmh} ${LANG.speedUnit}`;
 
     // Speed color
     if (speedKmh > 100) {
@@ -48,8 +50,8 @@ export class HUD {
   }
 
   // Set control mode display
-  setControlMode(mode: 'keyboard' | 'mouse'): void {
-    this.controlModeDisplay.textContent = mode.toUpperCase();
+  setControlMode(mode: ControlMode): void {
+    this.controlModeDisplay.textContent = getControlModeName(mode);
     this.controlModeDisplay.classList.toggle('mouse-mode', mode === 'mouse');
   }
 
@@ -57,7 +59,7 @@ export class HUD {
   setTurnWarning(show: boolean, direction?: 'left' | 'right'): void {
     if (show && direction) {
       this.turnIndicator.classList.remove('hidden');
-      this.turnDirection.textContent = direction === 'right' ? 'RIGHT' : 'LEFT';
+      this.turnDirection.textContent = direction === 'right' ? LANG.turnRight : LANG.turnLeft;
     } else {
       this.turnIndicator.classList.add('hidden');
     }

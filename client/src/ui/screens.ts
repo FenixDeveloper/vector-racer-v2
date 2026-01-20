@@ -1,4 +1,5 @@
 import { ColorPalette } from '@/types';
+import { LANG } from '@/lang';
 
 export class Screens {
   // DOM elements
@@ -63,7 +64,7 @@ export class Screens {
 
   // Set player name in welcome message
   setPlayerName(name: string): void {
-    this.welcomeName.textContent = `Welcome, ${name}`;
+    this.welcomeName.textContent = LANG.welcome(name);
   }
 
   // Show start screen
